@@ -1,0 +1,24 @@
+{
+  "name": "universal-connector-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Blesfia/universal-connector-client.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Blesfia/universal-connector-client/issues"
+  },
+  "homepage": "https://github.com/Blesfia/universal-connector-client#readme",
+  "dependencies": {
+    "@nestjs/common": "^6.3.1",
+    "botbuilder": "^4.4.0",
+    "ngrok": "^3.2.0"
+  }
+}
