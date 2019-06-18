@@ -9,8 +9,8 @@
       "node"
     ],
     "lib": ["es7"],
-    "baseUrl": "src",
-    "rootDir": "src",
+    "baseUrl": "./src",
+    "rootDir": "./src",
     "removeComments": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

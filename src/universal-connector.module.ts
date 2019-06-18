@@ -1,15 +1,23 @@
-import { HttpModule, Module } from '@nestjs/common';
+import { HttpModule, Module, DynamicModule } from '@nestjs/common';
 import { BotController } from './bot.controller';
 import { UniversalClientAdapter } from './universal-client.adapter';
 
 @Module({
-  controllers: [BotController],
-  exports: [UniversalClientAdapter],
   imports: [
     HttpModule,
   ],
-  providers: [
-    UniversalClientAdapter,
-  ],
 })
-export class UniversalConnectorModule { }
+export class UniversalConnectorModule {
+  static forRoot(entities = [], options?): DynamicModule {
+
+    const providers = [
+      UniversalClientAdapter,
+    ];
+    return {
+      module: UniversalConnectorModule,
+      controllers: [BotController],
+      providers: providers,
+      exports: providers,
+    };
+  }
+}
