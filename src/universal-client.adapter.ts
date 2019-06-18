@@ -10,6 +10,7 @@ export class UniversalClientAdapter extends BotAdapter {
   private reference;
   private static username;
   private conversations = {};
+  private turnContext;
   private logger = new Logger(UniversalClientAdapter.name);
   constructor(
     private readonly httpService: HttpService,
@@ -25,16 +26,17 @@ export class UniversalClientAdapter extends BotAdapter {
     this.nextId = 0;
   }
 
-  public async register(username, port) {
-      UniversalClientAdapter.username = username;
-      UniversalClientAdapter.url = await ngrok.connect(port);
-      this.logger.log(`DMZ Url created: ${UniversalClientAdapter.url}`);
-      this.logger.debug('Attempting to connect to master');
-      await this.httpService.post('https://nodeconf-chatbot.herokuapp.com/api/v1/bot/register', { username, url: UniversalClientAdapter.url }).toPromise();
-      return true;
+  public async register(username, port, turnContext) {
+    this.turnContext = turnContext;
+    UniversalClientAdapter.username = username;
+    UniversalClientAdapter.url = await ngrok.connect(port);
+    this.logger.log(`DMZ Url created: ${UniversalClientAdapter.url}`);
+    this.logger.debug('Attempting to connect to master');
+    await this.httpService.post('https://nodeconf-chatbot.herokuapp.com/api/v1/bot/register', { username, url: UniversalClientAdapter.url }).toPromise();
+    return true;
   }
 
-  public async respondToRequest({ from, text}, turnContext) {
+  public async respondToRequest({ from, text }) {
     const activity = TurnContext.applyConversationReference({
       id: (this.nextId++).toString(),
       text,
@@ -44,7 +46,7 @@ export class UniversalClientAdapter extends BotAdapter {
     // Create context and run middleware pipe
     const context = new TurnContext(this, activity);
     this.conversations[from] = [];
-    await this.runMiddleware(context, turnContext).catch((err) => { this.printError(err.toString()); });
+    await this.runMiddleware(context, this.turnContext).catch((err) => { this.printError(err.toString()); });
     return this.conversations[from];
   }
 
